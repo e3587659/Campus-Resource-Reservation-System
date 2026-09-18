@@ -6,18 +6,17 @@
 #include <fstream>
 #include <sstream>
 #include <string> 
-#include <vector>
 #include "../include/Reservation.h"
 
 using namespace std;
 
 int main() {
 
-    std::string reservationID;  
-    std::string studentID;           
-    std::string studentname; 
-    std::string resourcesID;    
-    std::string date;
+    string reservationID;  
+    string studentID;           
+    string studentname; 
+    string resourceID;    
+    string date;
 
     string line = "301|1001|Alice Smith|R101|09/15/2026";
 
@@ -26,13 +25,13 @@ int main() {
     getline(ss, reservationID, '|');
     getline(ss, studentID, '|');
     getline(ss, studentname, '|');
-    getline(ss, resourcesID, '|');
+    getline(ss, resourceID, '|');
     getline(ss, date);
 
     cout << reservationID << endl;
     cout << studentID << endl;
     cout << studentname << endl;
-    cout << resourcesID << endl;
+    cout << resourceID << endl;
     cout << date << endl;
  
 }
