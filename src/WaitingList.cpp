@@ -1,30 +1,50 @@
-#ifndef WAITINGLIST_H
-#define WAITINGLIST_H
+#include "WaitingList.h"
 
-#include <string>
-#include <iostream>
+WaitingList::WaitingList() : front(nullptr), rear(nullptr) {}
 
-struct QueueNode {
-    std::string studentID;
-    std::string studentName;
-    QueueNode* next;
-    QueueNode(std::string sID, std::string sName) 
-        : studentID(sID), studentName(sName), next(nullptr) {}
-};
+WaitingList::~WaitingList() {
+    while (front) {
+        QueueNode* temp = front;
+        front = front->next;
+        delete temp;
+    }
+}
 
-class WaitingList {
-private:
-    QueueNode* front;
-    QueueNode* rear;
+void WaitingList::enqueue(const std::string& studentID, const std::string& studentName) {
+    QueueNode* newNode = new QueueNode(studentID, studentName);
+    if (!rear) {
+        front = rear = newNode;
+        return;
+    }
+    rear->next = newNode;
+    rear = newNode;
+}
 
-public:
-    WaitingList();
-    ~WaitingList();
+bool WaitingList::dequeue(std::string& studentID, std::string& studentName) {
+    if (!front) return false;
+    
+    QueueNode* temp = front;
+    studentID = temp->studentID;
+    studentName = temp->studentName;
+    
+    front = front->next;
+    if (!front) rear = nullptr;
+    
+    delete temp;
+    return true;
+}
 
-    void enqueue(const std::string& studentID, const std::string& studentName);
-    bool dequeue(std::string& studentID, std::string& studentName);
-    bool isEmpty() const;
-    void display() const;
-};
+bool WaitingList::isEmpty() const { return front == nullptr; }
 
-#endif
+void WaitingList::display() const {
+    if (isEmpty()) {
+        std::cout << "  [Empty]\n";
+        return;
+    }
+    QueueNode* curr = front;
+    int pos = 1;
+    while (curr) {
+        std::cout << "  " << pos++ << ". " << curr->studentName << " (ID: " << curr->studentID << ")\n";
+        curr = curr->next;
+    }
+}
