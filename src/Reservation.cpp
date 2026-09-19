@@ -2,36 +2,38 @@
 // Created by mike on 9/16/26.
 //
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string> 
 #include "../include/Reservation.h"
 
-using namespace std;
+Reservation::Reservation(std::string reservationID,
+                         std::string studentID,        
+                         std::string studentName, 
+                         std::string resourceID,   
+                         std::string date) {
 
-int main() {
+    this->reservationID = reservationID;
+    this->studentID = studentID;
+    this->studentName = studentName;
+    this->resourceID = resourceID;
+    this->date = date;
+} 
 
-    string reservationID;  
-    string studentID;           
-    string studentname; 
-    string resourceID;    
-    string date;
-
-    string line = "301|1001|Alice Smith|R101|09/15/2026";
-
-    stringstream ss(line);
-
-    getline(ss, reservationID, '|');
-    getline(ss, studentID, '|');
-    getline(ss, studentname, '|');
-    getline(ss, resourceID, '|');
-    getline(ss, date);
-
-    cout << reservationID << endl;
-    cout << studentID << endl;
-    cout << studentname << endl;
-    cout << resourceID << endl;
-    cout << date << endl;
- 
+std::string Reservation::getReservation() {
+    return reservationID;
 }
+                
+std::string Reservation::getStudentID() {
+    return studentID;
+}
+
+std::string Reservation::getStudentName() {
+    return studentName;
+}
+
+std::string Reservation::getResourceID() {
+    return resourceID;
+}
+
+std::string Reservation::getDate() {
+    return date;
+}
+

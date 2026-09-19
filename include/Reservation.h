@@ -1,6 +1,8 @@
 //
 // Created by mike on 9/16/26.
 //
+#ifndef RESERVATION_H
+#define RESERVATION_H
 
 #include <string>
 
@@ -9,17 +11,26 @@ class Reservation {
 private: //variable cannot be accessed from outside the class//
     std::string reservationID;  
     std::string studentID;           
-    std::string studentname; 
+    std::string studentName; 
     std::string resourceID;    
     std::string date;
 
-public: //getter function allows external program to read variable//
+public: 
+    //constructor created a reservation using the information provided//
+    Reservation(std::string reservationID,
+                std::string studentID,
+                std::string studentName,
+                std::string resourceID,
+                std::string date);
+
+    //getter function allows external program to read variable//
     std::string getReservation();
     std::string getStudentID();
-    std::string getStudentname();
+    std::string getStudentName();
     std::string getResourceID();
     std::string getDate();
-
+    
 };
 
+#endif
 
