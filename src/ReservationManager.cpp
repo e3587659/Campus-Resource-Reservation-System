@@ -1,6 +1,6 @@
-//
-// Created by mike on 9/16/26
-//
+
+// Created by mike on 9/16/26//
+
 #include <iostream> 
 #include <fstream>  
 #include <string>   
@@ -63,9 +63,32 @@ void ReservationManager::displayReservation(const std::string& reservationID) {
 
 }
 
+bool ReservationManager::createReservation(const Reservation& reservation) {
+
+    Node* current = head;
+
+        while (current != nullptr) {
+
+        //checks for same resource on same date//
+        if (current->data.getResourceID() == reservation.getResourceID() &&
+            current->data.getDate() == reservation.getDate()) {
+
+            return false;
+        }
+
+        current = current->next;
+    }
+
+    //if no conflict is found, adds reservation//
+    addReservation(reservation);
+
+    return true;
+
+}
+
 //removes reservation from link list//
 bool ReservationManager::removeReservation(const std::string& reservationID) {
-
+    
     Node* current = head;
     Node* previous = nullptr;
 
@@ -141,6 +164,18 @@ int main() {
 
     }
 
+    //test creating a new reservation//
+    Reservation newReservation("321", "1021", "Mike", "R999", "09/20/2026");
+
+    if (manager.createReservation(newReservation)) {
+        cout << "New reservation created successfully." << endl;
+    }
+    else {
+        cout << "Reservation conflict." << endl;
+        }
+
+        manager.displayReservation("321");
+
     //test removal//
     cout << "\nRemoving reservation 303:" << endl;
 
@@ -154,5 +189,13 @@ int main() {
     //test search after removal//
     cout << "\nSearching for reservation 303 after removal:" << endl;
     manager.displayReservation("303");
+    //test conflicting reservation//
+Reservation conflictReservation("322", "1022", "Test", "R999", "09/20/2026");
 
+if (manager.createReservation(conflictReservation)) {
+    cout << "New reservation created successfully." << endl;
+}
+else {
+    cout << "Reservation conflict." << endl;
+}
 }

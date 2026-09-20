@@ -1,6 +1,6 @@
-//
-// Created by mike on 9/16/26.
-//
+
+// Created by mike on 9/16/26.//
+
 #ifndef RESERVATION_H
 #define RESERVATION_H
 
@@ -24,11 +24,11 @@ public:
                 std::string date);
 
     //getter function allows external program to read variable//
-    std::string getReservation();
-    std::string getStudentID();
-    std::string getStudentName();
-    std::string getResourceID();
-    std::string getDate();
+    std::string getReservation() const;
+    std::string getStudentID() const;
+    std::string getStudentName() const;
+    std::string getResourceID() const;
+    std::string getDate() const;
     
 };
 
