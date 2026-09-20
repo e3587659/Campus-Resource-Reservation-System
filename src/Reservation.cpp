@@ -1,37 +1,47 @@
-//
-// Created by mike on 9/16/26.
-//
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string> 
+// Created by mike on 9/16/26.//
+
 #include "../include/Reservation.h"
+#include <iostream>
 
-using namespace std;
+Reservation::Reservation(std::string reservationID,
+                         std::string studentID,        
+                         std::string studentName, 
+                         std::string resourceID,   
+                         std::string date) {
 
-int main() {
+    this->reservationID = reservationID;
+    this->studentID = studentID;
+    this->studentName = studentName;
+    this->resourceID = resourceID;
+    this->date = date;
+} 
 
-    string reservationID;  
-    string studentID;           
-    string studentname; 
-    string resourceID;    
-    string date;
+std::string Reservation::getReservation() const {
+    return reservationID;
+}
 
-    string line = "301|1001|Alice Smith|R101|09/15/2026";
+std::string Reservation::getStudentID() const {
+    return studentID;
+}
 
-    stringstream ss(line);
+std::string Reservation::getStudentName() const {
+    return studentName;
+}
 
-    getline(ss, reservationID, '|');
-    getline(ss, studentID, '|');
-    getline(ss, studentname, '|');
-    getline(ss, resourceID, '|');
-    getline(ss, date);
+std::string Reservation::getResourceID() const {
+    return resourceID;
+}
 
-    cout << reservationID << endl;
-    cout << studentID << endl;
-    cout << studentname << endl;
-    cout << resourceID << endl;
-    cout << date << endl;
- 
+std::string Reservation::getDate() const {
+    return date;
+}
+
+void Reservation::display() const {
+    std::cout << getReservation() << std::endl;
+    std::cout << getStudentID() << std::endl;
+    std::cout << getStudentName() << std::endl;
+    std::cout << getResourceID() << std::endl;
+    std::cout << getDate() << std::endl;
+
 }

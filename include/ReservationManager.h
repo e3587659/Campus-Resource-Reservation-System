@@ -1,22 +1,41 @@
-#ifndef RESERVATION_MANAGER_H
-#define RESERVATION_MANAGER_H
+#ifndef RESERVATIONMANAGER_H
+#define RESERVATIONMANAGER_H
 
-#include <vector>
 #include <string>
+#include <vector>
+#include "Reservation.h"
 #include "Resource.h"
 
 class ReservationManager {
-private:
-    std::vector<Resource> resources;
 
-public:
-    ReservationManager();
+    private:
+        struct Node {
+
+            Reservation data;
+
+            Node* next;
+        };
+
+        Node* head;
+
+        std::vector<Resource> resources;
     
-    void loadResources(const std::string& filename);
+    public:
+        ReservationManager();
+
+        void addReservation(const Reservation& reservation);
+
+        bool createReservation(const Reservation& reservation);
     
-    void displayAllResources() const;
-    
-    const std::vector<Resource>& getResources() const;
+        void displayReservation(const std::string& reservationID);
+
+        bool removeReservation(const std::string& reservationID);
+
+        void loadResources(const std::string& filename);
+
+        void displayAllResources() const;
+
+        const std::vector<Resource>& getResources() const;
 };
 
 #endif
