@@ -29,7 +29,10 @@ class ReservationManager {
     
         void displayReservation(const std::string& reservationID);
 
+        void displayAllReservations() const;
+
         bool removeReservation(const std::string& reservationID);
+        
 
         void loadResources(const std::string& filename);
 
