@@ -64,6 +64,25 @@ void ReservationManager::displayReservation(const std::string& reservationID) {
 
 }
 
+void ReservationManager::displayAllReservations() const {
+
+    Node* current = head;
+
+    if (current == nullptr) {
+        cout << "No active reservations." << endl;
+        return;
+    }
+
+    while (current != nullptr) {
+
+        current->data.display();
+
+        cout << endl;
+
+        current = current->next;
+    }
+}
+
 bool ReservationManager::createReservation(const Reservation& reservation) {
 
     bool resourceExists = false;
@@ -71,7 +90,9 @@ bool ReservationManager::createReservation(const Reservation& reservation) {
     for (const Resource& resource : resources) {
 
         if (resource.getId() == reservation.getResourceID()) {
+
             resourceExists = true;
+            
             break;
         }
     }
@@ -145,83 +166,46 @@ bool ReservationManager::removeReservation(const std::string& reservationID) {
 
 }
 
-int main() {
+int main() { 
+ 
+    ReservationManager manager; 
 
-    ReservationManager manager;
-    //waiting for loadResources to be added
-    //manager.loadResources("/workspaces/Campus-Resource-Reservation-System/data/resources.txt");
-
-    ifstream file("/workspaces/Campus-Resource-Reservation-System/data/reservations.txt");
-
-    string line;
-
-    while (getline(file, line)) { //Reads each reservation from the file and splits into its individual//
-
-        string reservationID;
-        string studentID;
-        string studentName;
-        string resourceID;
-        string date;
-
-        stringstream ss(line);
-     
-        getline(ss, reservationID, '|');   
-        getline(ss, studentID, '|');
-        getline(ss, studentName, '|');
-        getline(ss, resourceID, '|');
-        getline(ss, date);
-
-        //creates reservation from information read//
-        Reservation reservation(reservationID,
-                                studentID,
-                                studentName,
-                                resourceID,
-                                date);
-        
-        //adds reservation to linked list//
-        manager.addReservation(reservation);
-
-        //test the reservation using getters// 
-            // cout << reservation.getReservation() << endl;
-            // cout << reservation.getStudentID() << endl;
-            // cout << reservation.getStudentName() << endl;
-            // cout << reservation.getResourceID() << endl;
-            // cout << reservation.getDate() << endl;
-
+    //waiting for loadResources to be added 
+    //manager.loadResources("/workspaces/Campus-Resource-Reservation-System/data/resources.txt"); 
+ 
+    ifstream file("/workspaces/Campus-Resource-Reservation-System/data/reservations.txt"); 
+ 
+    string line; 
+ 
+    while (getline(file, line)) {
+ 
+        string reservationID; 
+        string studentID; 
+        string studentName; 
+        string resourceID; 
+        string date; 
+ 
+        stringstream ss(line); 
+      
+        getline(ss, reservationID, '|');    
+        getline(ss, studentID, '|'); 
+        getline(ss, studentName, '|'); 
+        getline(ss, resourceID, '|'); 
+        getline(ss, date); 
+ 
+        //creates reservation from information read// 
+        Reservation reservation(reservationID, 
+                                studentID, 
+                                studentName, 
+                                resourceID, 
+                                date); 
+         
+        //adds reservation to linked list// 
+        manager.addReservation(reservation); 
     }
 
-    //test creating a new reservation//
-    Reservation newReservation("321", "1021", "Mike", "R999", "09/20/2026");
+    cout << "\nActive Reservations:" << endl;
+    manager.displayAllReservations();
 
-    if (manager.createReservation(newReservation)) {
-        cout << "New reservation created successfully." << endl;
-    }
-    else {
-        cout << "Reservation conflict." << endl;
-        }
-
-        manager.displayReservation("321");
-
-    //test removal//
-    cout << "\nRemoving reservation 303:" << endl;
-
-    if (manager.removeReservation("303")) {
-        cout << "Reservation removed successfully." << endl;
-    }
-    else {
-        cout << "Reservation not found." << endl;
-    }
-
-    //test search after removal//
-    cout << "\nSearching for reservation 303 after removal:" << endl;
-    manager.displayReservation("303");
-    //test conflicting reservation//
-Reservation conflictReservation("322", "1022", "Test", "R999", "09/20/2026");
-
-if (manager.createReservation(conflictReservation)) {
-    cout << "New reservation created successfully." << endl;
-}
-else {
-    cout << "Reservation conflict." << endl;
-}
+    return 0;
 }
