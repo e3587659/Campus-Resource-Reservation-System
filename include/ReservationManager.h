@@ -1,11 +1,10 @@
-
-// Created by mike on 9/16/26.//
-
 #ifndef RESERVATIONMANAGER_H
 #define RESERVATIONMANAGER_H
 
 #include <string>
+#include <vector>
 #include "Reservation.h"
+#include "Resource.h"
 
 class ReservationManager {
 
@@ -16,7 +15,10 @@ class ReservationManager {
 
             Node* next;
         };
+
         Node* head;
+
+        std::vector<Resource> resources;
     
     public:
         ReservationManager();
@@ -29,7 +31,11 @@ class ReservationManager {
 
         bool removeReservation(const std::string& reservationID);
 
-        
+        void loadResources(const std::string& filename);
+
+        void displayAllResources() const;
+
+        const std::vector<Resource>& getResources() const;
 };
 
 #endif
