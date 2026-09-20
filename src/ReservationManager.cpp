@@ -40,6 +40,7 @@ void ReservationManager::addReservation(const Reservation& reservation) {
 
 //searched link list for a reservation//
 void ReservationManager::displayReservation(const std::string& reservationID) {
+
     Node* current = head;
 
     while(current != nullptr) {
@@ -65,12 +66,34 @@ void ReservationManager::displayReservation(const std::string& reservationID) {
 
 bool ReservationManager::createReservation(const Reservation& reservation) {
 
+    bool resourceExists = false;
+
+    for (const Resource& resource : resources) {
+
+        if (resource.getId() == reservation.getResourceID()) {
+            resourceExists = true;
+            break;
+        }
+    }
+
+    if (!resourceExists) {
+
+        return false;
+    }
+
     Node* current = head;
 
         while (current != nullptr) {
 
+        if (current->data.getReservation() == reservation.getReservation()) {
+
+            return false;
+        
+        }
+
         //checks for same resource on same date//
         if (current->data.getResourceID() == reservation.getResourceID() &&
+
             current->data.getDate() == reservation.getDate()) {
 
             return false;
@@ -90,6 +113,7 @@ bool ReservationManager::createReservation(const Reservation& reservation) {
 bool ReservationManager::removeReservation(const std::string& reservationID) {
     
     Node* current = head;
+    
     Node* previous = nullptr;
 
     while (current != nullptr) {
@@ -124,6 +148,8 @@ bool ReservationManager::removeReservation(const std::string& reservationID) {
 int main() {
 
     ReservationManager manager;
+    //waiting for loadResources to be added
+    //manager.loadResources("/workspaces/Campus-Resource-Reservation-System/data/resources.txt");
 
     ifstream file("/workspaces/Campus-Resource-Reservation-System/data/reservations.txt");
 

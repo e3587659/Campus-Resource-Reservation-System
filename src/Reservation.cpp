@@ -2,6 +2,7 @@
 // Created by mike on 9/16/26.//
 
 #include "../include/Reservation.h"
+#include <iostream>
 
 Reservation::Reservation(std::string reservationID,
                          std::string studentID,        
@@ -36,3 +37,11 @@ std::string Reservation::getDate() const {
     return date;
 }
 
+void Reservation::display() const {
+    std::cout << getReservation() << std::endl;
+    std::cout << getStudentID() << std::endl;
+    std::cout << getStudentName() << std::endl;
+    std::cout << getResourceID() << std::endl;
+    std::cout << getDate() << std::endl;
+
+}

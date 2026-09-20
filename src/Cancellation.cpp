@@ -1,4 +1,5 @@
-#include "CancellationHistory.h"
+#include "../include/Cancellation.h"
+#include <iostream>
 
 CancellationHistory::CancellationHistory() : top(nullptr) {}
 
