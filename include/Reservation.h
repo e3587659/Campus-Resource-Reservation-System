@@ -1,6 +1,3 @@
-
-// Created by mike on 9/16/26.//
-
 #ifndef RESERVATION_H
 #define RESERVATION_H
 
@@ -30,6 +27,8 @@ public:
     std::string getResourceID() const;
     std::string getDate() const;
     
+    void display() const;
+
 };
 
 #endif
