@@ -23,6 +23,8 @@ class ReservationManager {
     public:
         ReservationManager();
 
+        ~ReservationManager();
+
         void addReservation(const Reservation& reservation);
 
         bool createReservation(const Reservation& reservation);
@@ -31,8 +33,8 @@ class ReservationManager {
 
         void displayAllReservations() const;
 
-        bool removeReservation(const std::string& reservationID);
-        
+        bool removeReservation(const std::string& reservationID,
+            Reservation& cancelledReservation);
 
         void loadResources(const std::string& filename);
 

@@ -14,6 +14,21 @@ ReservationManager::ReservationManager() {
     head = nullptr;
 }
 
+ReservationManager::~ReservationManager() {
+
+    Node* current = head;
+        
+    while (current != nullptr) {
+        Node* nextNode = current->next;
+        delete current;
+        current = nextNode;
+
+    }
+
+    head = nullptr;
+
+}
+
 //adds reservation to linked list//
 void ReservationManager::addReservation(const Reservation& reservation) {
 
@@ -131,8 +146,11 @@ bool ReservationManager::createReservation(const Reservation& reservation) {
 }
 
 //removes reservation from link list//
-bool ReservationManager::removeReservation(const std::string& reservationID) {
+bool ReservationManager::removeReservation(
+    const std::string& reservationID,
+    Reservation& cancelledReservation) {
     
+
     Node* current = head;
     
     Node* previous = nullptr;
@@ -141,9 +159,11 @@ bool ReservationManager::removeReservation(const std::string& reservationID) {
 
         if (current->data.getReservation() == reservationID) {
 
+            cancelledReservation = current->data;
+
             if (previous == nullptr) {
                 head = current->next;
-
+            
             }
 
             else {
@@ -162,50 +182,18 @@ bool ReservationManager::removeReservation(const std::string& reservationID) {
 
     }
 
-        return false;
+    return false;
 
 }
 
-int main() { 
- 
-    ReservationManager manager; 
+void ReservationManager::loadResources(const std::string& filename) {
 
-    //waiting for loadResources to be added 
-    //manager.loadResources("/workspaces/Campus-Resource-Reservation-System/data/resources.txt"); 
- 
-    ifstream file("/workspaces/Campus-Resource-Reservation-System/data/reservations.txt"); 
- 
-    string line; 
- 
-    while (getline(file, line)) {
- 
-        string reservationID; 
-        string studentID; 
-        string studentName; 
-        string resourceID; 
-        string date; 
- 
-        stringstream ss(line); 
-      
-        getline(ss, reservationID, '|');    
-        getline(ss, studentID, '|'); 
-        getline(ss, studentName, '|'); 
-        getline(ss, resourceID, '|'); 
-        getline(ss, date); 
- 
-        //creates reservation from information read// 
-        Reservation reservation(reservationID, 
-                                studentID, 
-                                studentName, 
-                                resourceID, 
-                                date); 
-         
-        //adds reservation to linked list// 
-        manager.addReservation(reservation); 
-    }
+}
 
-    cout << "\nActive Reservations:" << endl;
-    manager.displayAllReservations();
+void ReservationManager::displayAllResources() const {
 
-    return 0;
+}
+
+const std::vector<Resource>& ReservationManager::getResources() const {
+
 }

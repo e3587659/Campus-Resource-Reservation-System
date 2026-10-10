@@ -13,6 +13,9 @@ private: //variable cannot be accessed from outside the class//
     std::string date;
 
 public: 
+
+    Reservation();
+
     //constructor created a reservation using the information provided//
     Reservation(std::string reservationID,
                 std::string studentID,

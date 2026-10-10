@@ -4,6 +4,14 @@
 #include "../include/Reservation.h"
 #include <iostream>
 
+Reservation::Reservation() {
+    reservationID = "";
+    studentID = "";
+    studentName = "";
+    resourceID = "";
+    date = "";
+}
+
 Reservation::Reservation(std::string reservationID,
                          std::string studentID,        
                          std::string studentName, 
