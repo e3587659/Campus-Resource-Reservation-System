@@ -187,13 +187,42 @@ bool ReservationManager::removeReservation(
 }
 
 void ReservationManager::loadResources(const std::string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout << "Error: Could not open resource file: " << filename << endl;
+        return;
+    }
 
+    resources.clear();
+    string line;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+        
+        stringstream ss(line);
+        string id, name;
+        
+        if (getline(ss, id, ',') && getline(ss, name)) {
+            Resource res(id, name); 
+            resources.push_back(res);
+        }
+    }
+    file.close();
+    cout << "Resources loaded successfully from " << filename << endl;
 }
 
 void ReservationManager::displayAllResources() const {
+    if (resources.empty()) {
+        cout << "No resources available in the system." << endl;
+        return;
+    }
 
+    cout << "--- Available Resources ---" << endl;
+    for (const Resource& resource : resources) {
+        resource.display(); 
+        cout << "---------------------------" << endl;
+    }
 }
 
 const std::vector<Resource>& ReservationManager::getResources() const {
-
+    return resources;
 }
