@@ -132,6 +132,9 @@ bool ReservationManager::createReservation(const Reservation& reservation) {
 
             current->data.getDate() == reservation.getDate()) {
 
+            waitingQueue.enqueue(reservation); 
+            cout << "Resource is already booked on this date. Added to the waiting list queue." << endl;
+
             return false;
         }
 
