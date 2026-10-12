@@ -80,17 +80,15 @@ int main() {
             break;
         }
         case 5: {
-            Reservation restoredRes("", "", "", "", "");
-            if (!undoStack.isEmpty()) {
-                if (undoStack.pop(restoredRes)) { 
-                    manager.createReservation(restoredRes);
-                    cout << "Successfully restored reservation: " << restoredRes.getReservation() << endl;
-                }
-            } else {
-                cout << "No cancellations to undo." << endl;
-            }
-            break;
-        }
+    if (!cancellationStack.isEmpty()) {
+        Reservation restoredRes = cancellationStack.pop();
+        reservationManager.addReservation(restoredRes);
+        cout << "Successfully restored reservation: " << restoredRes.getReservationID() << endl;
+    } else {
+        cout << "No cancellations to undo." << endl;
+    }
+    break;
+}
             case 6: {
                 string searchID;
                 cout << "Enter Reservation ID to search: ";
