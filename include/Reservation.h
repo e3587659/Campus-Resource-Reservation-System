@@ -1,4 +1,5 @@
 #ifndef RESERVATION_H
+#include "WaitingList.h" 
 #define RESERVATION_H
 
 #include <string>
