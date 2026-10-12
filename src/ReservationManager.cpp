@@ -202,7 +202,7 @@ void ReservationManager::loadResources(const std::string& filename) {
         string id, name;
         
         if (getline(ss, id, ',') && getline(ss, name)) {
-            Resource res(id, name); 
+            Resource res(id, name, "General", true); 
             resources.push_back(res);
         }
     }
