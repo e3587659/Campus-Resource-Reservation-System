@@ -7,6 +7,7 @@
 class Reservation {
 
 private: //variable cannot be accessed from outside the class//
+    WaitingList waitingQueue;
     std::string reservationID;  
     std::string studentID;           
     std::string studentName; 
