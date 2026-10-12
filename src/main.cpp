@@ -1,3 +1,4 @@
+#include "CancellationHistory.h" 
 #include <iostream>
 #include <string>
 #include "ReservationManager.h"
@@ -19,7 +20,8 @@ void displayMenu() {
 
 int main() {
     ReservationManager manager;
-
+    CancellationHistory undoStack;
+    
     string filename = "data/resources.txt";
     cout << "Loading resources from " << filename << "..." << endl;
     manager.loadResources(filename);
@@ -65,21 +67,30 @@ int main() {
                 break;
             }
             case 4: {
-                string resID;
-                cout << "Enter Reservation ID to remove: ";
-                cin >> resID;
-                Reservation cancelledRes("", "", "", "", "");
-                if (manager.removeReservation(resID, cancelledRes)) {
-                    cout << "Reservation removed successfully and queued for undo." << endl;
-                } else {
-                    cout << "Reservation ID not found." << endl;
+            string resID;
+            cout << "Enter Reservation ID to remove: ";
+            cin >> resID;
+            Reservation cancelledRes("", "", "", "", "");
+            if (manager.removeReservation(resID, cancelledRes)) {
+                undoStack.push(cancelledRes); 
+                cout << "Reservation removed successfully and added to undo stack." << endl;
+            } else {
+                cout << "Reservation ID not found." << endl;
+            }
+            break;
+        }
+        case 5: {
+            Reservation restoredRes("", "", "", "", "");
+            if (!undoStack.isEmpty()) {
+                if (undoStack.pop(restoredRes)) { 
+                    manager.createReservation(restoredRes);
+                    cout << "Successfully restored reservation: " << restoredRes.getReservation() << endl;
                 }
-                break;
+            } else {
+                cout << "No cancellations to undo." << endl;
             }
-            case 5: {
-                cout << "Undo feature called (Ensure stack pop is linked)." << endl;
-                break;
-            }
+            break;
+        }
             case 6: {
                 string searchID;
                 cout << "Enter Reservation ID to search: ";
