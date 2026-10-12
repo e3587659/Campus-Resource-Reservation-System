@@ -79,16 +79,19 @@ int main() {
             }
             break;
         }
-        case 5: {
-    if (!cancellationStack.isEmpty()) {
-        Reservation restoredRes = cancellationStack.pop();
-        reservationManager.addReservation(restoredRes);
-        cout << "Successfully restored reservation: " << restoredRes.getReservationID() << endl;
-    } else {
-        cout << "No cancellations to undo." << endl;
-    }
-    break;
-}
+     case 5: {
+            if (!undoStack.isEmpty()) {
+                Reservation restoredRes = undoStack.pop();
+                if (manager.createReservation(restoredRes)) {
+                    cout << "Successfully restored reservation: " << restoredRes.getReservationID() << endl;
+                } else {
+                    cout << "Error: Could not restore reservation (schedule conflict)." << endl;
+                }
+            } else {
+                cout << "No cancellations to undo." << endl;
+            }
+            break;
+        }
             case 6: {
                 string searchID;
                 cout << "Enter Reservation ID to search: ";
