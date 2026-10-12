@@ -88,7 +88,7 @@ int main() {
                 break;
             }
             case 7: {
-                manager.generateSystemReport();
+                 cout << "System report feature not yet implemented." << endl;
                 break;
             }
             case 8: {
