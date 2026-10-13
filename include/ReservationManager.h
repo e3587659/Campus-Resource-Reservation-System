@@ -19,6 +19,7 @@ class ReservationManager {
         Node* head;
 
         std::vector<Resource> resources;
+        WaitingList waitingQueue;
     
     public:
         ReservationManager();
