@@ -51,6 +51,6 @@ void Resource::display() const {
     std::cout << "ID: " << resourceId 
               << " | Name: " << resourceName 
               << " | Category: " << category 
-              << " | Status: " << (available ? "Available" : "Reserved") 
+              << " | Status: " << (available ? "Available" : "Unavailable")
               << std::endl;
 }

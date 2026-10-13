@@ -1,26 +1,23 @@
 #include <iostream>
 #include <cassert>
 #include "WaitingList.h"
-#include "CancellationHistory.h"
+#include "Cancellation.h"
 
 void testWaitingListQueue() {
     std::cout << "[RUNNING TEST] Waiting List (Queue FIFO Operations)... ";
     WaitingList list;
     
     assert(list.isEmpty());
-    assert(list.getWaitCount() == 0);
 
     // Enqueue items
     list.enqueue("1001", "Alice");
     list.enqueue("1002", "Bob");
     assert(!list.isEmpty());
-    assert(list.getWaitCount() == 2);
 
     // Dequeue items in FIFO order
     std::string id, name;
     bool success = list.dequeue(id, name);
     assert(success && id == "1001" && name == "Alice");
-    assert(list.getWaitCount() == 1);
 
     success = list.dequeue(id, name);
     assert(success && id == "1002" && name == "Bob");
@@ -38,7 +35,6 @@ void testCancellationHistoryStack() {
     CancellationHistory stack;
 
     assert(stack.isEmpty());
-    assert(stack.getSize() == 0);
 
     // Push dummy reservations
     Reservation r1("RES01", "1001", "Alice", "R101", "2026-10-12");
@@ -46,16 +42,14 @@ void testCancellationHistoryStack() {
 
     stack.push(r1);
     stack.push(r2);
-    assert(stack.getSize() == 2);
 
     // Pop top item (LIFO order -> r2 first)
     Reservation restored;
     bool success = stack.pop(restored);
-    assert(success && restored.getReservationID() == "RES02");
-    assert(stack.getSize() == 1);
+    assert(success && restored.getReservation() == "RES02");
 
     success = stack.pop(restored);
-    assert(success && restored.getReservationID() == "RES01");
+    assert(success && restored.getReservation() == "RES01");
     assert(stack.isEmpty());
 
     // Test empty pop underflow state

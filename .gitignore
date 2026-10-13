@@ -67,3 +67,7 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# Campus Resource Reservation System executables
+/resource_system
+/reservation_system

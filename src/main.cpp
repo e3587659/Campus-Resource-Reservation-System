@@ -1,4 +1,4 @@
-#include "CancellationHistory.h" 
+#include "Cancellation.h"
 #include <iostream>
 #include <string>
 #include "ReservationManager.h"
@@ -21,7 +21,7 @@ void displayMenu() {
 int main() {
     ReservationManager manager;
     CancellationHistory undoStack;
-    
+
     string filename = "data/resources.txt";
     cout << "Loading resources from " << filename << "..." << endl;
     manager.loadResources(filename);
@@ -72,38 +72,51 @@ int main() {
             cin >> resID;
             Reservation cancelledRes("", "", "", "", "");
             if (manager.removeReservation(resID, cancelledRes)) {
-                undoStack.push(cancelledRes); 
+                undoStack.push(cancelledRes);
                 cout << "Reservation removed successfully and added to undo stack." << endl;
             } else {
                 cout << "Reservation ID not found." << endl;
             }
             break;
         }
-     case 5: {
-            if (!undoStack.isEmpty()) {
-                Reservation restoredRes = undoStack.pop();
-                if (manager.createReservation(restoredRes)) {
-                    cout << "Successfully restored reservation: " << restoredRes.getReservationID() << endl;
-                } else {
-                    cout << "Error: Could not restore reservation (schedule conflict)." << endl;
-                }
-            } else {
-                cout << "No cancellations to undo." << endl;
-            }
-            break;
+case 5: {
+    Reservation restoredRes;
+
+    if (undoStack.pop(restoredRes)) {
+        if (manager.createReservation(restoredRes)) {
+            cout << "Successfully restored reservation: "
+                 << restoredRes.getReservation() << endl;
+        } else {
+            cout << "Error: Could not restore reservation (schedule conflict)." << endl;
+            undoStack.push(restoredRes);
         }
-            case 6: {
+    } else {
+        cout << "No cancellations to undo." << endl;
+    }
+
+    break;
+}            case 6: {
                 string searchID;
                 cout << "Enter Reservation ID to search: ";
                 cin >> searchID;
                 manager.displayReservation(searchID);
                 break;
             }
-            case 7: {
-                 cout << "System report feature not yet implemented." << endl;
-                break;
-            }
-            case 8: {
+case 7: {
+    cout << "\n========== SYSTEM REPORT ==========\n";
+
+    cout << "\nTotal Resources: "
+         << manager.getResources().size() << endl;
+
+    cout << "\n--- All Resources ---\n";
+    manager.displayAllResources();
+
+    cout << "\n--- Active Reservations ---\n";
+    manager.displayAllReservations();
+
+    cout << "\n========== END OF REPORT ==========\n";
+    break;
+}            case 8: {
                 cout << "Exiting system. Goodbye!" << endl;
                 break;
             }
