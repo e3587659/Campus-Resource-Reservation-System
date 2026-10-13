@@ -5,6 +5,7 @@
 #include <vector>
 #include "Reservation.h"
 #include "Resource.h"
+#include "WaitingList.h"
 
 class ReservationManager {
 
