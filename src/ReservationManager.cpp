@@ -1,231 +1,173 @@
 
 // Created by mike on 9/16/26//
 
-#include <iostream> 
-#include <fstream>  
-#include <string>   
+#include "ReservationManager.h"
+#include <fstream>
 #include <sstream>
-#include "../include/ReservationManager.h"
+#include <iostream>
 
-using namespace std;
-
-//starts the linked list as empty//
-ReservationManager::ReservationManager() {
-    head = nullptr;
-}
+ReservationManager::ReservationManager() : reservationHead(nullptr) {}
 
 ReservationManager::~ReservationManager() {
-
-    Node* current = head;
-        
-    while (current != nullptr) {
-        Node* nextNode = current->next;
-        delete current;
-        current = nextNode;
-
-    }
-
-    head = nullptr;
-
-}
-
-//adds reservation to linked list//
-void ReservationManager::addReservation(const Reservation& reservation) {
-
-    //creates new node to store reservation//
-    Node* newNode = new Node{reservation, nullptr};
-
-    //if list is empty, it moved the new node to first//
-    if (head == nullptr) {
-        head = newNode;
-        return;
-
-    }
-
-    Node* current = head;
-
-    while (current->next != nullptr) {
-        current = current->next;
-
-    }
-
-    current->next =newNode;
-
-}
-
-//searched link list for a reservation//
-void ReservationManager::displayReservation(const std::string& reservationID) {
-
-    Node* current = head;
-
-    while(current != nullptr) {
-
-        if (current->data.getReservation() == reservationID) {
-            cout << current->data.getReservation() << endl;
-            cout << current->data.getStudentID() << endl;
-            cout << current->data.getStudentName() << endl;
-            cout << current->data.getResourceID() << endl;
-            cout << current->data.getDate() << endl;
-
-            return;
-        
-        }
-
-        current = current->next;
-
-    }
-
-    cout << "Reservation not found." << endl;
-
-}
-
-void ReservationManager::displayAllReservations() const {
-
-    Node* current = head;
-
-    if (current == nullptr) {
-        cout << "No active reservations." << endl;
-        return;
-    }
-
-    while (current != nullptr) {
-
-        current->data.display();
-
-        cout << endl;
-
-        current = current->next;
+    while (reservationHead) {
+        ListNode* temp = reservationHead;
+        reservationHead = reservationHead->next;
+        delete temp;
     }
 }
 
-bool ReservationManager::createReservation(const Reservation& reservation) {
+bool ReservationManager::loadResourcesFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) return false;
 
-    bool resourceExists = false;
-
-    for (const Resource& resource : resources) {
-
-        if (resource.getId() == reservation.getResourceID()) {
-
-            resourceExists = true;
-            
-            break;
-        }
-    }
-
-    if (!resourceExists) {
-
-        return false;
-    }
-
-    Node* current = head;
-
-        while (current != nullptr) {
-
-        if (current->data.getReservation() == reservation.getReservation()) {
-
-            return false;
-        
-        }
-
-        //checks for same resource on same date//
-        if (current->data.getResourceID() == reservation.getResourceID() &&
-
-            current->data.getDate() == reservation.getDate()) {
-
-            waitingQueue.enqueue(reservation.getStudentID(), reservation.getStudentName()); 
-            cout << "Resource is already booked on this date. Added to the waiting list queue." << endl;
-
-            return false;
-        }
-
-        current = current->next;
-    }
-
-    //if no conflict is found, adds reservation//
-    addReservation(reservation);
-
-    return true;
-
-}
-
-//removes reservation from link list//
-bool ReservationManager::removeReservation(
-    const std::string& reservationID,
-    Reservation& cancelledReservation) {
-    
-
-    Node* current = head;
-    
-    Node* previous = nullptr;
-
-    while (current != nullptr) {
-
-        if (current->data.getReservation() == reservationID) {
-
-            cancelledReservation = current->data;
-
-            if (previous == nullptr) {
-                head = current->next;
-            
-            }
-
-            else {
-
-                previous->next = current->next;
-                
-            }
-
-            delete current;
-            return true;
-
-        }
-
-        previous = current;
-        current = current->next;
-
-    }
-
-    return false;
-
-}
-
-void ReservationManager::loadResources(const std::string& filename) {
-    ifstream file(filename);
-    if (!file.is_open()) {
-        cout << "Error: Could not open resource file: " << filename << endl;
-        return;
-    }
-
-    resources.clear();
-    string line;
-    while (getline(file, line)) {
+    std::string line;
+    while (std::getline(file, line)) {
         if (line.empty()) continue;
+        std::stringstream ss(line);
+        std::string id, name, type;
         
-        stringstream ss(line);
-        string id, name;
-        
-        if (getline(ss, id, ',') && getline(ss, name)) {
-            Resource res(id, name, "General", true); 
-            resources.push_back(res);
+        std::getline(ss, id, ',');
+        std::getline(ss, name, ',');
+        std::getline(ss, type, ',');
+
+        if (!id.empty()) {
+            resources.push_back(Resource(id, name, type, true));
         }
     }
     file.close();
-    cout << "Resources loaded successfully from " << filename << endl;
+    return true;
 }
 
 void ReservationManager::displayAllResources() const {
-    if (resources.empty()) {
-        cout << "No resources available in the system." << endl;
-        return;
-    }
-
-    cout << "--- Available Resources ---" << endl;
-    for (const Resource& resource : resources) {
-        resource.display(); 
-        cout << "---------------------------" << endl;
+    std::cout << "\n--- Campus Resources ---\n";
+    for (const auto& r : resources) {
+        r.display();
     }
 }
 
-const std::vector<Resource>& ReservationManager::getResources() const {
-    return resources;
+Resource* ReservationManager::findResource(const std::string& resourceID) {
+    for (auto& r : resources) {
+        if (r.getID() == resourceID) return &r;
+    }
+    return nullptr;
+}
+
+bool ReservationManager::reservationExists(const std::string& resID) const {
+    ListNode* curr = reservationHead;
+    while (curr) {
+        if (curr->reservation.getReservationID() == resID) return true;
+        curr = curr->next;
+    }
+    return false;
+}
+
+void ReservationManager::createReservation(const std::string& resID, const std::string& stID, 
+                                            const std::string& stName, const std::string& rID, 
+                                            const std::string& date) {
+    Resource* res = findResource(rID);
+    if (!res) {
+        std::cout << "Error: Invalid Resource ID.\n";
+        return;
+    }
+
+    if (reservationExists(resID)) {
+        std::cout << "Error: Reservation ID already exists.\n";
+        return;
+    }
+
+    if (!res->getAvailability()) {
+        std::cout << "Resource unavailable. Adding " << stName << " to waiting list...\n";
+        waitingLists[rID].enqueue(stID, stName);
+        std::cout << "Added to waiting list successfully.\n";
+        return;
+    }
+
+    res->setAvailability(false);
+    Reservation newRes(resID, stID, stName, rID, date);
+    
+    ListNode* newNode = new ListNode(newRes);
+    newNode->next = reservationHead;
+    reservationHead = newNode;
+
+    std::cout << "Reservation Created Successfully.\n";
+}
+
+void ReservationManager::cancelReservation(const std::string& resID) {
+    ListNode* curr = reservationHead;
+    ListNode* prev = nullptr;
+
+    while (curr && curr->reservation.getReservationID() != resID) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    if (!curr) {
+        std::cout << "Error: Reservation ID not found.\n";
+        return;
+    }
+
+    if (prev) prev->next = curr->next;
+    else reservationHead = curr->next;
+
+    Reservation cancelledRes = curr->reservation;
+    std::string rID = cancelledRes.getResourceID();
+    delete curr;
+
+    historyStack.push(cancelledRes);
+    std::cout << "Reservation Cancelled. Added to cancellation history.\n";
+
+    // FIFO assignment from waiting list
+    std::string nextStID, nextStName;
+    if (waitingLists[rID].dequeue(nextStID, nextStName)) {
+        std::cout << "Auto-assigning " << rID << " to next waiting student: " << nextStName << "\n";
+        createReservation("AUTO_" + std::to_string(rand() % 900 + 100), nextStID, nextStName, rID, "Auto-Assigned");
+    } else {
+        Resource* res = findResource(rID);
+        if (res) res->setAvailability(true);
+    }
+}
+
+void ReservationManager::undoCancellation() {
+    Reservation restored;
+    if (!historyStack.pop(restored)) {
+        std::cout << "Error: No cancellations to undo.\n";
+        return;
+    }
+
+    Resource* res = findResource(restored.getResourceID());
+    if (res && res->getAvailability()) {
+        res->setAvailability(false);
+        ListNode* newNode = new ListNode(restored);
+        newNode->next = reservationHead;
+        reservationHead = newNode;
+        std::cout << "Reservation Restored Successfully.\n";
+    } else {
+        std::cout << "Cannot restore: Resource is currently occupied.\n";
+    }
+}
+
+void ReservationManager::displayActiveReservations() const {
+    std::cout << "\n--- Active Reservations ---\n";
+    if (!reservationHead) {
+        std::cout << "No active reservations.\n";
+        return;
+    }
+    ListNode* curr = reservationHead;
+    while (curr) {
+        curr->reservation.display();
+        curr = curr->next;
+    }
+}
+
+void ReservationManager::displayWaitingLists() const {
+    std::cout << "\n--- Waiting Lists ---\n";
+    for (const auto& pair : waitingLists) {
+        std::cout << "Resource ID " << pair.first << ":\n";
+        pair.second.display();
+    }
+}
+
+void ReservationManager::displayCancellationHistory() const {
+    std::cout << "\n--- Cancellation History (Stack Top First) ---\n";
+    historyStack.display();
 }
